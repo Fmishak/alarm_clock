@@ -7,10 +7,30 @@
 //
 
 #include <iostream>
+#include <ctime>
+#include <chrono>
+#include <thread>
+#include<unistd.h>
+#include <time.h>
+#include<iomanip>
+#include <stdlib.h>
 using namespace std;
-int main(int argc, const char * argv[]) {
-    // insert code here...
-    std::cout << "Hello, World  testing!\n";
-    cout << " Thank you!" << endl;
+
+
+
+
+int main() {
+
+    while (1){
+        time_t current = time(0);
+        cout << ctime(&current)<< endl;
+  
+        sleep(1);   //make the program sleep for 1 second
+       
+    
+    }
+   
     return 0;
+    
+    
 }
