@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		AF10F4DE219A55E50086112A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AF10F4DD219A55E50086112A /* main.cpp */; };
+		AF16F21A219FA10A0078B5E8 /* libncurses.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = AF16F219219FA10A0078B5E8 /* libncurses.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +26,7 @@
 /* Begin PBXFileReference section */
 		AF10F4DA219A55E50086112A /* alarm-clock */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "alarm-clock"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF10F4DD219A55E50086112A /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		AF16F219219FA10A0078B5E8 /* libncurses.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libncurses.tbd; path = usr/lib/libncurses.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +34,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AF16F21A219FA10A0078B5E8 /* libncurses.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -43,6 +46,7 @@
 			children = (
 				AF10F4DC219A55E50086112A /* alarm-clock */,
 				AF10F4DB219A55E50086112A /* Products */,
+				AF16F218219FA10A0078B5E8 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -60,6 +64,14 @@
 				AF10F4DD219A55E50086112A /* main.cpp */,
 			);
 			path = "alarm-clock";
+			sourceTree = "<group>";
+		};
+		AF16F218219FA10A0078B5E8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AF16F219219FA10A0078B5E8 /* libncurses.tbd */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
