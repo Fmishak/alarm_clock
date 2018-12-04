@@ -5,7 +5,7 @@
 //  Created by Farouk Mishak on 11/12/18.
 //  Copyright © 2018 Farouk Mishak. All rights reserved.
 //
-// Compile with: g++ -Wall main.cpp -lncurses -o alarm-clock
+// Compile with: g++ -Wall -std=c++11 -Icereal/include main.cpp -lncurses -o alarm-clock
 #include <iostream>
 #include <fstream>
 #include <ctime>
