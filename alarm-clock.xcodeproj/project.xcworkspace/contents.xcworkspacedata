@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:alarm-clock.xcodeproj">
+      location = "group:../alarm-clock/Makefile">
+   </FileRef>
+   <FileRef
+      location = "self:">
    </FileRef>
 </Workspace>
