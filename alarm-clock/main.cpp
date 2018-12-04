@@ -6,6 +6,14 @@
 //  Copyright © 2018 Farouk Mishak. All rights reserved.
 //
 // Compile with: g++ -Wall -std=c++11 -Icereal/include main.cpp -lncurses -o alarm-clock
+//
+// To get, compile, and run this code from GitHub:
+// Open terminal
+// git clone git@github.com:Fmishak/alarm_clock.git alarm_clock
+// cd alarm_clock/alarm-clock
+// make
+// ./alarm-clock
+
 #include <iostream>
 #include <fstream>
 #include <ctime>
