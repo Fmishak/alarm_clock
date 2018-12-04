@@ -117,7 +117,10 @@ vector<ALARM> add_alarm(vector<ALARM> alarms, char *term_type) {
     cout << "Minute: " ;
     cin >> alarm.minute;
     cout << "Name: ";
-    cin >> alarm.name;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // need this for getline to work.
+    // See https://stackoverflow.com/questions/25475384/when-and-why-do-i-need-to-use-cin-ignore-in-c
+    // And http://www.cplusplus.com/reference/istream/istream/ignore/
+    getline(cin, alarm.name);
     if(term_type) { // turn on ncurses again
         start_ncurses();
     }
