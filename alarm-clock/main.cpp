@@ -9,7 +9,7 @@
 //
 // To get, compile, and run this code from GitHub:
 // Open terminal
-// git clone git@github.com:Fmishak/alarm_clock.git alarm_clock
+// git clone https://github.com/Fmishak/alarm_clock.git alarm_clock
 // cd alarm_clock/alarm-clock
 // make
 // ./alarm-clock
