@@ -73,32 +73,36 @@ struct ALARM {
 };
 
 void save_alarms(vector<ALARM> alarms, string filename) {
-    ofstream out(filename, ios::binary);
-    cereal::BinaryOutputArchive archive(out);
-    archive(alarms);
+    // This function will erase the file and write a new one.
+    // Let Cereal write our vector of ALARM structs to the file:
+    ofstream out(filename, ios::binary); // create the file
+    cereal::BinaryOutputArchive archive(out); // set up Cereal
+    archive(alarms); // tell Cereal to write our vector to the file
 }
 
 vector<ALARM> load_alarms(string &filename) {
     vector<ALARM> alarms;
-    ifstream in(filename, ios::binary);
-    if (!in.is_open())
+    ifstream in(filename, ios::binary); // try to open the file
+    if (!in.is_open()) // the file doesn't exist
         return alarms; // return empty vector if we could not open the file.
-    cereal::BinaryInputArchive archive(in);
-    archive(alarms);
+    // Let Cereal read in the file for us:
+    cereal::BinaryInputArchive archive(in); // set up Cereal
+    archive(alarms); // tell Cereal to read the file into our vector
     return alarms;
 }
 
 void show_alarms(vector<ALARM> alarms, char *term_type, int start_y, int start_x) {
     clear();
-    if (term_type)
-        mvprintw(start_y++, start_x, "#  HH:MM  Name");
-    else
-        cout << "#  HH:MM  Name\n";
+    if (term_type) // If we're running in a normal terminal:
+        mvprintw(start_y++, start_x, "#  HH:MM  Name"); // ncurses
+    else // If we're running in Xcode, we can't do fancy stuff:
+        cout << "#  HH:MM  Name\n"; // plain cout
+
     for (int n = 0; n<alarms.size(); n++) {
         ALARM alarm = alarms[n];
-        if (term_type)
+        if (term_type) // fancy ncurses: (uses old C style like printf)
             mvprintw(start_y++, start_x, "%i  % 2u:%02u  %s\n", n, alarm.hour, alarm.minute, alarm.name.c_str());
-        else
+        else // plain cout for Xcode:
             cout << n << "  " << setw(2) << alarm.hour << ':' << setfill('0') << setw(2) << alarm.minute << setfill(' ') << "  " << alarm.name << "\n";
     }
 }
@@ -161,6 +165,7 @@ void show_help(int start_y, int start_x) {
 }
 
 int wrap_24_hours(int seconds_since_midnight) {
+    // This function is used by secnonds_between().
     // Does C/C++ % operator handle negative numbers correctly?
     // until we verify, let's manually add a day at a time until the number is positive:
     while(seconds_since_midnight < 0)
@@ -171,8 +176,13 @@ int wrap_24_hours(int seconds_since_midnight) {
 }
 
 int seconds_between(unsigned alarm, unsigned start_time, unsigned end_time) {
-    // duration is how many seconds since start_time that we want to look for any alarms:
-    int duration = end_time - start_time;
+    // This function returns true if alarm is between start_time and end_time.
+    // start_time is the last time this program checked time().
+    // end_time is right now.
+    // Normally start_time and end_time are veryr close together, since main() checks every 100ms.  But it can be slowed down if the user presses A to add or D to delete an alarm and then takes a while to finish.
+
+    // wrap_24_hours() helps handles edge case when user has an alarm set for 12:00 midnight, but at 11:59pm, they press "A" to add an alarm and don't finish adding it until 12:01am.  start_time would be 11:59pm and end_time would be 12:01am.  end-start would be a large negative number.  (actually 120 - 86400)
+    int duration = wrap_24_hours(end_time - start_time);
     int x = wrap_24_hours(alarm - start_time);
     if (x>=0 && x<=duration)
         return 1;
@@ -181,9 +191,19 @@ int seconds_between(unsigned alarm, unsigned start_time, unsigned end_time) {
 }
 
 string get_new_ringing_alarm(vector<ALARM> alarms, time_t old_time, time_t current_time, int *alarm_is_ringing) {
+    // Search through vector of ALARM's for any that are active.
+    // old_time is the last time we were called and current_time is now.
 
+    // old_time and current_time measure seconds since Jan 1, 1970.
+    // Since our alarms repeat every day, we convert these times to be
+    // seconds since midnight every day.
+    
+    // localtime() converts seconds since 1970 into a struct tm with
+    // separate variables for hours, minutes, seconds, and the date.
+    // (But we don't need the date here.)
     struct tm *old_date_time = localtime(&old_time); // man localtime
     struct tm *current_date_time = localtime(&current_time); // man localtime
+    // Now convert hours, minutes, seconds to seconds since midnight:
     unsigned old_seconds_since_midnight =
         old_date_time->tm_hour * 3600 +
         old_date_time->tm_min * 60 +
@@ -193,15 +213,19 @@ string get_new_ringing_alarm(vector<ALARM> alarms, time_t old_time, time_t curre
         current_date_time->tm_min * 60 +
         current_date_time->tm_sec; // ignoring tm_year, tm_mon, and tm_mday
 
+    // This for loop searches vector of alarms for any alarm set between old and current:
     string name_of_ringing_alarm;
     for (int n = 0; n<alarms.size(); n++) {
         ALARM alarm = alarms[n];
 
+        // Convert this alarm to seconds since midnight:
         unsigned alarm_seconds_since_midnight = alarm.hour * 3600 + alarm.minute * 60;
-        // TODO: Is alarm_seconds_since_midnight between old_seconds_since_midnight and current_seconds_since_midnight
+
+        // seconds_between() tests if alarm_seconds_since_midnight is between old_seconds_since_midnight and current_seconds_since_midnight
         if (seconds_between(alarm_seconds_since_midnight, old_seconds_since_midnight, current_seconds_since_midnight)) {
-            *alarm_is_ringing = 1;
-            name_of_ringing_alarm = alarm.name;
+            // This is an active alarm!
+            *alarm_is_ringing = 1; // set a flag for main()
+            name_of_ringing_alarm = alarm.name; // save the name for main()
         }
     }
     return name_of_ringing_alarm;
